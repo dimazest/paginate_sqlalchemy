@@ -2,5 +2,6 @@ dist/
 *.pyc
 *.komodoproject
 paginate.egg-info/
+paginate_sqlalchemy.egg-info/
 build/
 virtualenv/
