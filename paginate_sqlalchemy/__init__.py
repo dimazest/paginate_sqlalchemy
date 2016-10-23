@@ -4,7 +4,7 @@
 """Enhances the paginate.Page class to work with SQLAlchemy objects"""
 
 import paginate
-
+from sqlalchemy import func, select
 
 class SqlalchemyOrmWrapper(object):
     """Wrapper class to access elements of an SQLAlchemy ORM query result."""
@@ -23,7 +23,7 @@ class SqlalchemyOrmWrapper(object):
 
 class SqlalchemyOrmPage(paginate.Page):
     """A pagination page that deals with SQLAlchemy ORM objects.
-    
+
     See the documentation on paginate.Page for general information on how to work
     with instances of this class."""
 
@@ -53,14 +53,15 @@ def sql_wrapper_factory(db_session=None):
             return self.db_session.execute(select).fetchall()
 
         def __len__(self):
-            return self.db_session.execute(self.obj.count()).scalar()
+            stmt = select([func.count()]).select_from(self.obj.alias())
+            return self.db_session.execute(stmt).scalar()
 
     return SqlalchemySelectWrapper
 
 
 class SqlalchemySelectPage(paginate.Page):
     """A pagination page that deals with SQLAlchemy Select objects.
-    
+
     See the documentation on paginate.Page for general information on how to work
     with instances of this class."""
 
